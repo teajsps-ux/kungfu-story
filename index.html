@@ -11,30 +11,30 @@
   <script src="https://cdn.jsdelivr.net/npm/wordcloud@1.2.2/src/wordcloud2.min.js"></script>
   
   <style>
-    /* === 全域與主題變數 (深色東方水墨霓虹風格) === */
+/* === 全域與主題變數 (深色東方水墨霓虹風格) === */
     :root {
-      --accent:  #d9531e;   /* 溫暖橘紅 (主強調) */
-      --accent2: #0f75bc;   /* 活力藍色 (次強調) */
-      --success: #2e7d32;   /* 深綠色 */
-      --warn:    #e65100;   /* 深琥珀色 */
-      --bg-light: #0b0f19;  /* 深色東方水墨底色 */
+      --accent:  #d35400;   /* 溫慢橘紅 (主強調，寶塔色) */
+      --accent2: #16a085;   /* 碧綠/翠綠色 (次強調，山水綠) */
+      --success: #2e7d32;   /* 森林綠 */
+      --warn:    #c0392b;   /* 溫慢深紅 */
+      --bg-light: #f4f7f6;  /* 3D紙雕明亮背景色 */
       --font-scale: 1.0;    /* 滾輪字體縮放比例 */
     }
 
     .reveal {
       font-family: 'Segoe UI', 'Noto Sans TC', sans-serif;
       background-color: var(--bg-light);
-      color: #f0f2f5; /* 文字改為淺色 */
+      color: #2c3e50; /* 文字改為深石板灰，高對比 */
     }
     
     /* Reveal.js 內建元件顏色覆寫 */
     .reveal .controls { color: var(--accent2); }
     .reveal .progress { color: var(--accent); }
     
-    /* 移除反轉濾鏡，回復原始深色霓虹水墨質感底圖 */
+    /* 紙雕底圖設置：高不透明度，使明亮紙雕插圖清晰可見 */
     .reveal .slide-background {
       filter: none !important;
-      opacity: 0.35 !important; /* 提升不透明度以展現霓虹線條 */
+      opacity: 0.90 !important;
     }
     
     /* VIZ 插圖對比元件的定位與原始深色樣式 */
@@ -64,8 +64,8 @@
       font-family: 'Segoe UI', 'Noto Sans TC', sans-serif;
       font-weight: 700;
       letter-spacing: -0.01em;
-      color: #ffffff;
-      text-shadow: 0 0 8px rgba(15, 117, 188, 0.6), 0 0 15px rgba(217, 83, 30, 0.4);
+      color: #1a202c; /* 深色標題 */
+      text-shadow: 1px 1px 0px #ffffff, 2px 2px 4px rgba(0,0,0,0.08); /* 浮雕紙張感 */
     }
     
     /* 縮放字型樣式套用 */
@@ -127,33 +127,33 @@
       font-weight: 600;
       box-shadow: 0 4px 10px rgba(217, 83, 30, 0.2);
     }
-    .title-slide .subtitle { font-size: calc(0.7em * var(--font-scale)) !important; color: #cbd5e1; margin-top: 0.5em; line-height: 1.5; }
+    .title-slide .subtitle { font-size: calc(0.7em * var(--font-scale)) !important; color: #4a5568; margin-top: 0.5em; line-height: 1.5; }
     .title-slide .author { margin-top: 2.2em; font-size: calc(0.45em * var(--font-scale)) !important; color: #a0aec0; }
 
     /* === 三欄修練卡片 (ICON) === */
     .adv-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-top: 0.8em; }
     .adv-card {
-      background: rgba(255, 255, 255, 0.05);
+      background: #ffffff; /* 白色紙張圖層 */
       border-top: 4px solid var(--accent2);
-      border-radius: 10px;
+      border-radius: 12px;
       padding: 20px 14px;
       text-align: center;
-      transition: transform 0.3s ease, background 0.3s ease;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.05), 0 2px 4px rgba(0,0,0,0.03); /* 紙雕層次陰影 */
     }
     .adv-card:hover {
-      background: rgba(255, 255, 255, 0.1);
       transform: translateY(-5px);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.08), 0 4px 8px rgba(0,0,0,0.04);
     }
     .adv-card .adv-icon { margin-bottom: 12px; }
     .adv-card .adv-icon img {
       width: 72px; height: 72px; object-fit: contain;
       display: block; margin: 0 auto;
-      filter: drop-shadow(0 2px 8px rgba(15, 117, 188, 0.3));
+      filter: drop-shadow(0 2px 8px rgba(22, 160, 133, 0.2));
     }
     .adv-card .adv-title { font-size: calc(0.6em * var(--font-scale)) !important; font-weight: 700; color: var(--accent2); margin-bottom: 8px; }
-    .adv-card .adv-desc { font-size: calc(0.42em * var(--font-scale)) !important; color: #cbd5e1; line-height: 1.6; }
+    .adv-card .adv-desc { font-size: calc(0.42em * var(--font-scale)) !important; color: #4a5568; line-height: 1.6; }
 
     /* === 視覺化 VIZ 雙層滑動對比 === */
     .viz-container {
@@ -161,8 +161,8 @@
       height: 420px;
       border-radius: 12px;
       overflow: hidden;
-      border: 2px solid rgba(255, 255, 255, 0.12);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+      border: 2px solid rgba(0, 0, 0, 0.08);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
       background-color: var(--bg-light);
     }
     #viz-divider {
@@ -197,7 +197,7 @@
       width: 250px;
       height: 8px;
       border-radius: 4px;
-      background: rgba(255, 255, 255, 0.2);
+      background: rgba(0, 0, 0, 0.1);
       outline: none;
       cursor: pointer;
     }
@@ -216,27 +216,29 @@
 
     /* === VS 對比排版 === */
     .vs-grid { display: grid; grid-template-columns: 1fr 60px 1fr; gap: 0; align-items: start; margin-top: 0.8em; }
-    .vs-col { background: rgba(255, 255, 255, 0.04); border-radius: 12px; padding: 22px; border: 1px solid rgba(255, 255, 255, 0.08); }
+    .vs-col { background: #ffffff; border-radius: 12px; padding: 22px; border: 1px solid rgba(0, 0, 0, 0.06); box-shadow: 0 8px 16px rgba(0,0,0,0.05); }
     .vs-col.left-col  { border-top: 3px solid var(--accent2); }
     .vs-col.right-col { border-top: 3px solid var(--accent); }
     .vs-label { font-size: calc(0.65em * var(--font-scale)) !important; font-weight: 700; margin-bottom: 12px; letter-spacing: 0.05em; }
     .vs-label.left  { color: var(--accent2); }
     .vs-label.right { color: var(--accent); }
-    .vs-center { display: flex; align-items: center; justify-content: center; font-size: 1.2em; font-weight: 900; color: #bbb; height: 120px; }
+    .vs-center { display: flex; align-items: center; justify-content: center; font-size: 1.2em; font-weight: 900; color: #888; height: 120px; }
     .vs-col ul { font-size: calc(0.42em * var(--font-scale)) !important; list-style: none; padding: 0; margin: 0; text-align: left; }
-    .vs-col ul li { padding: 6px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.08); color: #cbd5e1; }
+    .vs-col ul li { padding: 6px 0; border-bottom: 1px solid rgba(0, 0, 0, 0.06); color: #4a5568; }
     .vs-col ul li:last-child { border-bottom: none; }
     .vs-col ul li::before { content: "✦ "; opacity: 0.5; color: var(--accent2); }
 
     /* === 引用對話方塊 === */
     .quote-box {
-      background: rgba(255, 255, 255, 0.04);
-      border-left: 5px solid var(--accent);
+      background: #ffffff;
       border-radius: 8px;
       padding: 24px;
       margin: 1.0em 0;
       font-size: calc(0.58em * var(--font-scale)) !important;
-      color: #e2e8f0;
+      color: #2d3748;
+      border: 1px solid rgba(0,0,0,0.06);
+      border-left: 5px solid var(--accent);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.05);
       font-style: italic;
       line-height: 1.8;
       text-align: left;
@@ -245,19 +247,19 @@
 
     /* === 結論展示卡 === */
     .conclusion-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 0.8em; }
-    .conclusion-card { border-radius: 10px; padding: 22px; font-size: calc(0.45em * var(--font-scale)) !important; text-align: left; }
+    .conclusion-card { border-radius: 10px; padding: 22px; font-size: calc(0.45em * var(--font-scale)) !important; text-align: left; box-shadow: 0 8px 16px rgba(0,0,0,0.04); }
     .conclusion-card.positive {
-      background: rgba(15, 117, 188, 0.12);
-      border: 1px solid rgba(15, 117, 188, 0.35);
+      background: rgba(22, 160, 133, 0.06);
+      border: 1px solid rgba(22, 160, 133, 0.25);
     }
     .conclusion-card.caution {
-      background: rgba(217, 83, 30, 0.10);
-      border: 1px solid rgba(217, 83, 30, 0.30);
+      background: rgba(211, 84, 0, 0.05);
+      border: 1px solid rgba(211, 84, 0, 0.20);
     }
     .conclusion-card .cc-title { font-size: 1.2em; font-weight: 700; margin-bottom: 8px; }
     .conclusion-card.positive .cc-title { color: var(--accent2); }
     .conclusion-card.caution  .cc-title { color: var(--accent); }
-    .conclusion-card ul { list-style: none; padding: 0; margin: 0; color: #cbd5e1; line-height: 1.8; }
+    .conclusion-card ul { list-style: none; padding: 0; margin: 0; color: #4a5568; line-height: 1.8; }
     .conclusion-card ul li { margin-bottom: 6px; }
     .conclusion-card ul li::before { content: "→ "; opacity: 0.6; color: var(--accent2); }
 
@@ -266,12 +268,12 @@
     .end-slide .big-icon { margin-bottom: 20px; }
     .end-slide .big-icon img {
       width: 140px; height: 140px; object-fit: contain;
-      filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.3));
+      filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.15));
     }
-    .end-slide .tagline { font-size: calc(0.7em * var(--font-scale)) !important; color: #cbd5e1; margin-top: 10px; }
+    .end-slide .tagline { font-size: calc(0.7em * var(--font-scale)) !important; color: #4a5568; margin-top: 10px; }
 
     /* === 互動文字雲與投票排版 === */
-    .interact-title { font-size: calc(0.8em * var(--font-scale)) !important; margin-bottom: 12px; text-align: center; color: #ffffff; text-shadow: 0 0 8px rgba(15, 117, 188, 0.5); }
+    .interact-title { font-size: calc(0.8em * var(--font-scale)) !important; margin-bottom: 12px; text-align: center; color: #1a202c; text-shadow: 1px 1px 0px #ffffff, 2px 2px 4px rgba(0,0,0,0.08); }
     
     @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
   </style>
@@ -298,11 +300,11 @@
              data-background-opacity="0.25"
              data-background-size="cover">
       <h2>山上的白眉老人</h2>
-      <p style="font-size:calc(0.55em * var(--font-scale)); line-height:1.8; color:#cbd5e1; max-width:800px; margin:0 auto; text-align:left; font-weight: 500;">
+      <p style="font-size:calc(0.55em * var(--font-scale)); line-height:1.8; color:#4a5568; max-width:800px; margin:0 auto; text-align:left; font-weight: 500;">
         在許多人的眼裡，這位住在山上的白眉老人，是一個整天只會吃飯、睡覺的「老老人」。<br><br>
         然而，在一場月黑風高的夜晚，土匪頭「刀疤」帶著手下來襲，整個村莊陷入火海。在最危急的時刻，正是這位神秘大俠挺身而出，救走了三個無家可歸的小孩子。
       </p>
-      <div style="background:rgba(255, 255, 255, 0.08); border-radius:8px; padding:15px; margin-top:1.5em; display:inline-block; border:1px dashed rgba(255,255,255,0.15);">
+      <div style="background:#ffffff; border-radius:8px; padding:15px; margin-top:1.5em; display:inline-block; border:1px dashed rgba(0,0,0,0.15); box-shadow:0 4px 10px rgba(0,0,0,0.03);">
         <span style="font-size:calc(0.42em * var(--font-scale)); color:#ff9800; font-weight: 600;">💡 思考：大俠隱居山林，看起來平凡無奇，真正的功夫到底是什麼？</span>
       </div>
     </section>
@@ -316,29 +318,29 @@
       <div style="display:grid; grid-template-columns:260px 1fr; gap:16px; height:460px; text-align:left;">
         <!-- 左欄：輸入 + 排行 -->
         <div style="display:flex; flex-direction:column; gap:12px;">
-          <div style="background:rgba(255, 255, 255, 0.06); border-radius:10px; padding:14px; border:1px solid rgba(255,255,255,0.1);">
+          <div style="background:#ffffff; border-radius:10px; padding:14px; border:1px solid rgba(0,0,0,0.08); box-shadow:0 4px 12px rgba(0,0,0,0.03);">
             <div style="font-size:calc(0.38em * var(--font-scale)); color:var(--accent2); font-weight:700; margin-bottom:8px;">輸入關鍵字 (如：堅持、力氣、快)</div>
             <input id="wc-input" type="text" placeholder="答案字數請勿超過20字…" maxlength="20"
-              style="width:100%; padding:9px 12px; border-radius:8px; border:1px solid rgba(15,117,188,0.45);
-                     background:rgba(0,0,0,0.3); color:#fff; font-size:13px;
+              style="width:100%; padding:9px 12px; border-radius:8px; border:1px solid rgba(22,160,133,0.4);
+                     background:#f8fafc; color:#2c3e50; font-size:13px;
                      box-sizing:border-box; font-family:inherit; outline:none;" />
             <button id="wc-btn"
               style="width:100%; margin-top:8px; padding:10px; background:var(--accent2); color:#fff;
                      border:none; border-radius:8px; font-weight:700; font-size:13px; cursor:pointer;
-                     transition:background 0.3s; box-shadow: 0 2px 6px rgba(15,117,188,0.2);">
+                     transition:background 0.3s; box-shadow: 0 2px 6px rgba(22,160,133,0.2);">
               提交答案 ↵
             </button>
           </div>
-          <div style="background:rgba(255, 255, 255, 0.06); border-radius:10px; padding:14px; flex:1; overflow:hidden; display:flex; flex-direction:column; border:1px solid rgba(255,255,255,0.1);">
+          <div style="background:#ffffff; border-radius:10px; padding:14px; flex:1; overflow:hidden; display:flex; flex-direction:column; border:1px solid rgba(0,0,0,0.08); box-shadow:0 4px 12px rgba(0,0,0,0.03);">
             <div style="font-size:calc(0.38em * var(--font-scale)); color:var(--accent2); font-weight:700; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
               <span>即時統計榜</span>
               <span style="display:inline-block; background:#ff4757; color:#fff; padding:2px 6px;
                            border-radius:10px; font-size:0.8em; font-weight:bold; animation:pulse 1.5s infinite;">LIVE</span>
             </div>
-            <div id="wc-list" style="font-size:calc(0.34em * var(--font-scale)); overflow-y:auto; flex:1; color:#cbd5e1;">
+            <div id="wc-list" style="font-size:calc(0.34em * var(--font-scale)); overflow-y:auto; flex:1; color:#4a5568;">
               <div style="color:#888;padding:8px 0;text-align:center;">尚無資料</div>
             </div>
-            <div style="margin-top:8px; font-size:calc(0.32em * var(--font-scale)); color:#a0aec0; border-top:1px solid rgba(255,255,255,0.1); padding-top:6px; display:flex; justify-content:space-between; align-items:center;">
+            <div style="margin-top:8px; font-size:calc(0.32em * var(--font-scale)); color:#718096; border-top:1px solid rgba(0,0,0,0.08); padding-top:6px; display:flex; justify-content:space-between; align-items:center;">
               <div>
                 總次數：<span id="wc-total" style="color:var(--accent); font-weight:700;">0</span>　
                 獨立詞：<span id="wc-unique" style="color:var(--accent2); font-weight:700;">0</span>
@@ -355,7 +357,7 @@
                     position:relative; border:1px solid rgba(255,255,255,0.1);">
           <canvas id="wc-canvas" style="width:100%; height:100%; display:block;"></canvas>
           <div id="wc-empty" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
-                                     color:#a0aec0; font-size:calc(0.42em * var(--font-scale)); text-align:center;
+                                     color:#718096; font-size:calc(0.42em * var(--font-scale)); text-align:center;
                                      pointer-events:none; line-height:2.0;">
             等待第一個回覆 ✨<br>
             輸入詞語後將在此繪製即時文字雲！
@@ -369,7 +371,7 @@
              data-background-opacity="0.25"
              data-background-size="cover">
       <h2 style="margin-bottom:0.1em; text-shadow: 0 0 8px rgba(15, 117, 188, 0.6);">三兄弟的日常差事</h2>
-      <p style="font-size:calc(0.45em * var(--font-scale)); color:#cbd5e1; margin-bottom:0.8em;">白眉老人在屋後畫了個圈讓他們「蹲馬步」，並給每人派了一份特別的差事：</p>
+      <p style="font-size:calc(0.45em * var(--font-scale)); color:#4a5568; margin-bottom:0.8em;">白眉老人在屋後畫了個圈讓他們「蹲馬步」，並給每人派了一份特別的差事：</p>
       
       <div class="adv-grid">
         <!-- 卡片 1: 老大 -->
@@ -407,7 +409,7 @@
              data-background-opacity="0.25"
              data-background-size="cover">
       <h2 style="text-shadow: 0 0 8px rgba(15, 117, 188, 0.6);">十年修練的驚人轉變</h2>
-      <p style="font-size:calc(0.45em * var(--font-scale)); color:#cbd5e1; margin-bottom:1.0em;">拖動滑桿，平滑看見三兄弟「十年前」與「十年後」的特訓對比變化：</p>
+      <p style="font-size:calc(0.45em * var(--font-scale)); color:#4a5568; margin-bottom:1.0em;">拖動滑桿，平滑看見三兄弟「十年前」與「十年後」的特訓對比變化：</p>
       
       <div class="viz-container">
         <!-- Before: 十年前 -->
@@ -467,7 +469,7 @@
              data-background-opacity="0.25"
              data-background-size="cover">
       <h2 style="text-shadow: 0 0 8px rgba(15, 117, 188, 0.6);">這就是「功夫」！</h2>
-      <p style="font-size:calc(0.45em * var(--font-scale)); color:#cbd5e1; margin-bottom:1.0em;">危機關頭，三兄弟在電光石火間展現了驚人實力：</p>
+      <p style="font-size:calc(0.45em * var(--font-scale)); color:#4a5568; margin-bottom:1.0em;">危機關頭，三兄弟在電光石火間展現了驚人實力：</p>
       <div class="conclusion-grid">
         <div class="conclusion-card positive fragment">
           <div class="cc-title">⚡ 老大與老二的絕技</div>
@@ -495,7 +497,7 @@
       <div id="poll-options" style="display:flex; flex-direction:column; gap:12px; max-width:650px; margin: 0.8em auto 0 auto;">
         <!-- 由 JS 動態生成選項 -->
       </div>
-      <div style="font-size:calc(0.38em * var(--font-scale)); color:#cbd5e1; text-align:center; margin-top:1.0em;">
+      <div style="font-size:calc(0.38em * var(--font-scale)); color:#4a5568; text-align:center; margin-top:1.0em;">
         已投票學員：<span id="poll-total" style="color:var(--accent); font-weight:700;">0</span> 人
       </div>
     </section>
@@ -510,7 +512,7 @@
         打敗強難後，老大瘦皮猴依然滿臉困惑地問著，而白眉老人只是慢吞吞地走出來，微微一笑。
         <div class="quote-author">—— 繪本《功夫》結尾</div>
       </div>
-      <p style="font-size:calc(0.48em * var(--font-scale)); line-height:1.8; color:#cbd5e1; text-align:left; max-width:820px; margin: 0.8em auto 0 auto; font-weight: 500;">
+      <p style="font-size:calc(0.48em * var(--font-scale)); line-height:1.8; color:#4a5568; text-align:left; max-width:820px; margin: 0.8em auto 0 auto; font-weight: 500;">
         三兄弟這才恍然大悟：十年前的小樹苗長成大樹、小牛犢長成巨牛、小獵物鍛鍊出的動態視力——<br>
         原來，<strong>師父早在每天的功課中，把最深奧的功夫，一點一滴融進了他們的身體與生活中</strong>。真正的修行，並非在什麼秘笈 or 招式，而在於日常每一天的累積。
       </p>
@@ -537,8 +539,8 @@
 <div id="floating-toolbar" style="position: fixed; bottom: 20px; left: 20px; z-index: 1000; display: flex; align-items: center; gap: 12px; transform: translate3d(0, 0, 0); transition: box-shadow 0.3s; will-change: transform;">
   <!-- Drag Handle -->
   <div id="toolbar-drag-handle" style="cursor: grab; display: flex; align-items: center; justify-content: center;
-    background: rgba(13, 17, 23, 0.95); color: #ccc; border: 1px solid rgba(255,255,255,0.15); border-radius: 50%;
-    width: 32px; height: 32px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); user-select: none; font-size: 14px; font-weight: bold; transition: background 0.2s;">
+    background: rgba(255, 255, 255, 0.95); color: #555; border: 1px solid rgba(0,0,0,0.1); border-radius: 50%;
+    width: 32px; height: 32px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); user-select: none; font-size: 14px; font-weight: bold; transition: background 0.2s;">
     ✥
   </div>
 
@@ -567,7 +569,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
 <script>
-  // 初始化 Reveal.js
+// 初始化 Reveal.js
   Reveal.initialize({
     hash: true,
     transition: 'slide',
@@ -597,20 +599,18 @@
       fontToggleBtn.style.boxShadow = '0 4px 15px rgba(232, 100, 58, 0.5)';
     }
     localStorage.setItem('zhuyin_mode', active);
-    // 重繪 Reveal
     Reveal.layout();
   }
 
   // 初始化注音字型狀態
   setZhuyinMode(isZhuyinMode);
-
-  fontToggleBtn.addEventListener('click', () => {
+  fontToggleBtn?.addEventListener('click', () => {
     isZhuyinMode = !isZhuyinMode;
     setZhuyinMode(isZhuyinMode);
   });
 
   // Ctrl + Mouse Wheel 縮放字體排版，並保持置中
-  let fontScale = parseFloat(localStorage.getItem('kungfu_font_scale') || '1.0');
+  let fontScale = parseFloat(localStorage.getItem('slide_font_scale') || '1.0');
   
   // 建立縮放 HUD 顯示元件
   const scaleIndicator = document.createElement('div');
@@ -619,7 +619,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: rgba(13, 17, 23, 0.95);
+    background: rgba(255, 255, 255, 0.95);
     color: var(--accent2);
     border: 1px solid var(--accent2);
     border-radius: 12px;
@@ -630,7 +630,7 @@
     pointer-events: none;
     opacity: 0;
     transition: opacity 0.3s ease;
-    box-shadow: 0 0 15px rgba(79, 195, 247, 0.4);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
     font-family: inherit;
   `;
   document.body.appendChild(scaleIndicator);
@@ -647,8 +647,8 @@
 
   function applyFontScale(scale, showIndicator = false) {
     document.documentElement.style.setProperty('--font-scale', scale);
-    localStorage.setItem('kungfu_font_scale', scale);
-    Reveal.layout(); // 調用 Reveal.js 重新計算排版與居中
+    localStorage.setItem('slide_font_scale', scale);
+    Reveal.layout();
     if (showIndicator) {
       showScaleIndicator(scale);
     }
@@ -660,12 +660,10 @@
   // 監聽滾輪事件
   window.addEventListener('wheel', (e) => {
     if (e.ctrlKey) {
-      e.preventDefault(); // 阻止瀏覽器預設縮放
+      e.preventDefault();
       if (e.deltaY < 0) {
-        // 向上滾動 -> 放大
         fontScale = Math.min(1.8, fontScale + 0.05);
       } else {
-        // 向下滾動 -> 縮小
         fontScale = Math.max(0.6, fontScale - 0.05);
       }
       applyFontScale(fontScale, true);
@@ -681,7 +679,6 @@
     let startX = 0, startY = 0;
     let translateX = 0, translateY = 0;
     
-    // 恢復儲存的位置
     const savedX = localStorage.getItem('toolbar_x');
     const savedY = localStorage.getItem('toolbar_y');
     if (savedX && savedY) {
@@ -695,7 +692,7 @@
     
     function startDrag(e) {
       isDragging = true;
-      dragHandle.style.background = 'rgba(79, 195, 247, 0.2)';
+      dragHandle.style.background = 'rgba(22, 160, 133, 0.2)';
       dragHandle.style.cursor = 'grabbing';
       
       const clientX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
@@ -712,7 +709,7 @@
     
     function drag(e) {
       if (!isDragging) return;
-      if (e.cancelable) e.preventDefault(); // 阻止行動端拖曳時滾動頁面
+      if (e.cancelable) e.preventDefault();
       
       const clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
       const clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
@@ -725,10 +722,9 @@
     
     function endDrag() {
       isDragging = false;
-      dragHandle.style.background = 'rgba(13, 17, 23, 0.95)';
+      dragHandle.style.background = 'rgba(255, 255, 255, 0.95)';
       dragHandle.style.cursor = 'grab';
       
-      // 儲存位置
       localStorage.setItem('toolbar_x', translateX);
       localStorage.setItem('toolbar_y', translateY);
       
@@ -753,18 +749,16 @@
       vizDivider.style.left = val + '%';
 
       if (val > 50) {
-        labelAfter.classList.add('active');
-        labelBefore.classList.remove('active');
+        labelAfter?.classList.add('active');
+        labelBefore?.classList.remove('active');
       } else {
-        labelBefore.classList.add('active');
-        labelAfter.classList.remove('active');
+        labelBefore?.classList.add('active');
+        labelAfter?.classList.remove('active');
       }
     });
   }
 
-  // ==========================================
   // Web Speech API 語音導讀邏輯
-  // ==========================================
   const synth = window.speechSynthesis;
   const ttsPlayBtn = document.getElementById('tts-play-btn');
   const ttsSpeedSlider = document.getElementById('tts-speed-slider');
@@ -777,7 +771,6 @@
       const val = parseFloat(this.value).toFixed(1);
       ttsSpeedVal.textContent = val + 'x';
       if (isSpeaking) {
-        // 播放中調整語速，即時套用並重新播放
         speakCurrentSlide();
       }
     });
@@ -797,52 +790,38 @@
   }
 
   function speakCurrentSlide() {
-    synth.cancel(); // 停止先前的導讀
+    synth.cancel();
     const activeSlide = Reveal.getCurrentSlide();
     if (!activeSlide) return;
 
-    // 優先獲取使用者反白選取的文字
     const selectedText = window.getSelection().toString().trim();
     let textToRead = '';
     
     if (selectedText) {
       textToRead = selectedText;
     } else {
-      // 擷取當前頁面的全部文字，排除導讀標記
       const headers = Array.from(activeSlide.querySelectorAll('h1, h2, h3'))
         .map(el => el.innerText.replace(/🍬|🔊|✥/g, ''));
-      
       const paragraphs = Array.from(activeSlide.querySelectorAll('p, li, .adv-title, .adv-desc, .quote-box'))
         .map(el => el.innerText);
-
-      // 組合文字
       textToRead = [...headers, ...paragraphs].join('。 ');
     }
     
-    // 清理多餘空白與特殊字元
     textToRead = textToRead.replace(/\s+/g, ' ').trim();
-
     if (!textToRead) return;
 
     const utterance = new SpeechSynthesisUtterance(textToRead);
-    
-    // 設定台灣語音優先，其次為標準中文語音
     const voices = synth.getVoices();
     const zhVoice = voices.find(v => v.lang.includes('zh-TW')) || voices.find(v => v.lang.includes('zh'));
     if (zhVoice) {
       utterance.voice = zhVoice;
     }
     
-    // 設定速度 (預設設為 0.7x)
     utterance.rate = ttsSpeedSlider ? parseFloat(ttsSpeedSlider.value) : 0.7;
     utterance.pitch = 1.0;
 
-    utterance.onend = () => {
-      setTTSPlayState(false);
-    };
-    utterance.onerror = () => {
-      setTTSPlayState(false);
-    };
+    utterance.onend = () => setTTSPlayState(false);
+    utterance.onerror = () => setTTSPlayState(false);
 
     currentUtterance = utterance;
     synth.speak(utterance);
@@ -859,7 +838,6 @@
     });
   }
 
-  // 切換頁面時自動停止當前導讀
   Reveal.on('slidechanged', () => {
     stopSpeaking();
   });
@@ -1062,19 +1040,19 @@
       btn.id = `poll-btn-${opt.id}`;
       btn.innerHTML = `
         <div style="display:flex;align-items:center;gap:12px;width:100%;">
-          <span style="flex:0 0 24px;height:24px;border-radius:50%;border:2px solid rgba(255,255,255,0.3);
+          <span style="flex:0 0 24px;height:24px;border-radius:50%;border:2px solid rgba(0,0,0,0.15);
                        display:flex;align-items:center;justify-content:center;font-size:12px;"
                 id="poll-check-${opt.id}"></span>
-          <span style="flex:1;text-align:left;font-weight:600;color:#f1f5f9;">${opt.label}</span>
+          <span style="flex:1;text-align:left;font-weight:600;color:#2d3748;">${opt.label}</span>
           <span id="poll-bar-wrap-${opt.id}"
-                style="flex:0 0 160px;height:10px;background:rgba(255,255,255,0.12);border-radius:5px;overflow:hidden;">
+                style="flex:0 0 160px;height:10px;background:rgba(0,0,0,0.06);border-radius:5px;overflow:hidden;">
             <div id="poll-bar-${opt.id}" style="height:100%;width:0;background:var(--accent2);border-radius:5px;transition:width 0.4s;"></div>
           </span>
-          <span id="poll-pct-${opt.id}" style="flex:0 0 42px;text-align:right;font-size:0.8em;color:#cbd5e1;font-weight:700;">0%</span>
+          <span id="poll-pct-${opt.id}" style="flex:0 0 42px;text-align:right;font-size:0.8em;color:#4a5568;font-weight:700;">0%</span>
         </div>
       `;
       btn.style.cssText = `width:100%;padding:14px 18px;background:rgba(255, 255, 255, 0.06);
-        border:1px solid rgba(255,255,255,0.1);border-radius:10px;color:#cbd5e1;
+        border:1px solid rgba(255,255,255,0.1);border-radius:10px;color:#4a5568;
         font-size:0.48em;cursor:pointer;font-family:inherit;text-align:left;transition:background 0.3s, border-color 0.3s;`;
       
       btn.onmouseover = () => {
