@@ -75,6 +75,27 @@
     .reveal .fragment { opacity: 0.15; transition: all 0.5s ease; }
     .reveal .fragment.visible { opacity: 1; }
 
+    /* 支援字級放大時的內容滾動，避免遮蔽文字 */
+    .reveal .slides section {
+      max-height: 95% !important;
+      overflow-y: auto !important;
+      scrollbar-width: thin;
+      box-sizing: border-box;
+    }
+    .reveal .slides section::-webkit-scrollbar {
+      width: 6px;
+    }
+    .reveal .slides section::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .reveal .slides section::-webkit-scrollbar-thumb {
+      background: rgba(0, 0, 0, 0.15);
+      border-radius: 4px;
+    }
+    .reveal .slides section::-webkit-scrollbar-thumb:hover {
+      background: rgba(0, 0, 0, 0.3);
+    }
+
     /* === 注音字型切換與排版優化 === */
     body.zhuyin-mode,
     body.zhuyin-mode .reveal,
