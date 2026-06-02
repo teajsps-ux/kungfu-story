@@ -87,7 +87,7 @@
     body.zhuyin-mode .reveal div,
     body.zhuyin-mode .reveal button,
     body.zhuyin-mode .reveal input {
-      font-family: 'Bpmf Iansui', cursive !important;
+      font-family: 'Bpmf Iansui', 'BpmfIansui', cursive !important;
     }
 
     /* 注音模式下的行高與字級調整，防止符號重疊 */
@@ -1034,7 +1034,7 @@
       list: wcData.map(([w, c]) => [w, Math.max(16, Math.round((c / maxCount) * 60))]),
       gridSize: 8,
       weightFactor: 1,
-      fontFamily: '"Segoe UI", "Noto Sans TC", sans-serif',
+      fontFamily: isZhuyinMode ? '"Bpmf Iansui", "BpmfIansui", cursive' : '"Segoe UI", "Noto Sans TC", sans-serif',
       color: () => COLORS[Math.floor(Math.random() * COLORS.length)],
       backgroundColor: 'transparent',
       rotateRatio: 0.25,
