@@ -13,12 +13,15 @@
   <style>
     /* === 全域與主題變數 === */
     :root {
-      --accent:  #e8643a;   /* 橘紅 (主強調，火、動作) */
-      --accent2: #4fc3f7;   /* 青色 (次強調，水、輕功) */
+      --accent:  #e8643a;   /* 橘紅 (主強調) */
+      --accent2: #4fc3f7;   /* 青色 (次強調) */
       --success: #81c784;   /* 綠色 */
       --warn:    #ffb74d;   /* 琥珀色 */
       --bg-dark: #0d1117;   /* 深色背景 */
     }
+
+    /* Bpmf Iansui 注音字型引入 */
+    @import url('https://fonts.googleapis.com/css2?family=Bpmf+Iansui&display=swap');
 
     .reveal {
       font-family: 'Segoe UI', 'Noto Sans TC', sans-serif;
@@ -28,7 +31,7 @@
       font-family: 'Segoe UI', 'Noto Sans TC', sans-serif;
       font-weight: 700;
       letter-spacing: -0.01em;
-      text-shadow: 0 0 10px rgba(255,255,255,0.1);
+      text-shadow: 0 0 10px rgba(255,255,255,0.15);
     }
     .reveal h1 { font-size: 2.1em; color: #ffffff; }
     .reveal h2 { font-size: 1.4em; color: var(--accent2); }
@@ -36,6 +39,21 @@
     .reveal .progress { color: var(--accent); }
     .reveal .fragment { opacity: 0.15; transition: all 0.5s ease; }
     .reveal .fragment.visible { opacity: 1; }
+
+    /* === 注音字型切換樣式 === */
+    body.zhuyin-mode,
+    body.zhuyin-mode .reveal,
+    body.zhuyin-mode .reveal h1,
+    body.zhuyin-mode .reveal h2,
+    body.zhuyin-mode .reveal h3,
+    body.zhuyin-mode .reveal p,
+    body.zhuyin-mode .reveal span,
+    body.zhuyin-mode .reveal li,
+    body.zhuyin-mode .reveal div,
+    body.zhuyin-mode .reveal button,
+    body.zhuyin-mode .reveal input {
+      font-family: 'Bpmf Iansui', cursive !important;
+    }
 
     /* === 封面樣式 === */
     .title-slide { text-align: center; }
@@ -81,51 +99,24 @@
     /* === 視覺化 VIZ 雙層滑動對比 === */
     .viz-container {
       position: relative;
-      height: 380px;
+      height: 400px;
       border-radius: 12px;
       overflow: hidden;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
     }
     .viz-side {
       position: absolute;
       inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
       background-size: cover;
       background-position: center;
+      background-repeat: no-repeat;
     }
-    .viz-content {
-      padding: 30px;
-      background: rgba(13, 17, 23, 0.85);
-      border-radius: 12px;
-      width: 80%;
-      box-sizing: border-box;
-      text-align: left;
-      border: 1px solid rgba(255,255,255,0.08);
-    }
-    .viz-title {
-      font-size: 0.7em;
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
-    .viz-list {
-      font-size: 0.45em;
-      color: #ddd;
-      line-height: 1.7;
-      margin: 0;
-      padding-left: 20px;
-    }
-    .viz-list li {
-      margin-bottom: 6px;
-    }
-
     #viz-before {
-      background-color: #161b22;
+      background-image: url('images/viz_before.png');
     }
     #viz-after {
-      background-color: #21262d;
+      background-image: url('images/viz_after.png');
       clip-path: inset(0 100% 0 0);
     }
     #viz-divider {
@@ -138,6 +129,7 @@
       box-shadow: 0 0 12px var(--accent2);
       pointer-events: none;
       transform: translateX(-50%);
+      z-index: 20;
     }
     .slider-control {
       margin-top: 15px;
@@ -256,24 +248,29 @@
     </section>
 
     <!-- Slide 2: 故事開端 -->
-    <section>
+    <section data-background-image="images/bg_slide2.png"
+             data-background-opacity="0.25"
+             data-background-size="cover">
       <h2>山上的白眉老人</h2>
-      <p style="font-size:0.55em; line-height:1.8; color:#ccc; max-width:800px; margin:0 auto; text-align:left;">
+      <p style="font-size:0.55em; line-height:1.8; color:#eee; max-width:800px; margin:0 auto; text-align:left; text-shadow: 1px 1px 3px rgba(0,0,0,0.8);">
         在許多人的眼裡，這位住在山上的白眉老人，是一個整天只會吃飯、睡覺的「老老人」。<br><br>
         然而，在一場月黑風高的夜晚，土匪「頭刀刀疤」帶著手下來襲，整個村莊陷入火海。在最危急的時刻，正是這位神秘大俠挺身而出，救走了三個無家可歸的小孩子。
       </p>
-      <div style="background:rgba(255,255,255,0.03); border-radius:8px; padding:15px; margin-top:1.5em; display:inline-block; border:1px dashed rgba(255,255,255,0.1);">
+      <div style="background:rgba(13, 17, 23, 0.85); border-radius:8px; padding:15px; margin-top:1.5em; display:inline-block; border:1px dashed rgba(255,255,255,0.15);">
         <span style="font-size:0.42em; color:var(--warn);">💡 思考：大俠隱居山林，看起來平凡無奇，真正的功夫到底是什麼？</span>
       </div>
     </section>
 
     <!-- Slide 3: 互動提問 [INTERACT:wordcloud] -->
-    <section id="slide-wordcloud">
+    <section id="slide-wordcloud"
+             data-background-image="images/bg_slide3.png"
+             data-background-opacity="0.22"
+             data-background-size="cover">
       <div class="interact-title">互動調查：你覺得什麼是「功夫」？</div>
       <div style="display:grid; grid-template-columns:260px 1fr; gap:16px; height:460px; text-align:left;">
         <!-- 左欄：輸入 + 排行 -->
         <div style="display:flex; flex-direction:column; gap:12px;">
-          <div style="background:rgba(255,255,255,0.05); border-radius:10px; padding:14px; border:1px solid rgba(255,255,255,0.08);">
+          <div style="background:rgba(13, 17, 23, 0.85); border-radius:10px; padding:14px; border:1px solid rgba(255,255,255,0.08);">
             <div style="font-size:0.38em; color:var(--accent2); font-weight:700; margin-bottom:8px;">輸入關鍵字 (如：堅持、力氣、快)</div>
             <input id="wc-input" type="text" placeholder="答案字數請勿超過20字…" maxlength="20"
               style="width:100%; padding:9px 12px; border-radius:8px; border:1px solid rgba(79,195,247,0.3);
@@ -286,7 +283,7 @@
               提交答案 ↵
             </button>
           </div>
-          <div style="background:rgba(255,255,255,0.05); border-radius:10px; padding:14px; flex:1; overflow:hidden; display:flex; flex-direction:column; border:1px solid rgba(255,255,255,0.08);">
+          <div style="background:rgba(13, 17, 23, 0.85); border-radius:10px; padding:14px; flex:1; overflow:hidden; display:flex; flex-direction:column; border:1px solid rgba(255,255,255,0.08);">
             <div style="font-size:0.38em; color:var(--accent2); font-weight:700; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
               <span>即時統計榜</span>
               <span style="display:inline-block; background:#ff4757; color:#fff; padding:2px 6px;
@@ -303,11 +300,11 @@
         </div>
 
         <!-- 右欄：畫布 -->
-        <div style="background:rgba(255,255,255,0.03); border-radius:12px; overflow:hidden;
+        <div style="background:rgba(13, 17, 23, 0.6); border-radius:12px; overflow:hidden;
                     position:relative; border:1px solid rgba(255,255,255,0.08);">
           <canvas id="wc-canvas" style="width:100%; height:100%; display:block;"></canvas>
           <div id="wc-empty" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
-                                     color:#555; font-size:0.42em; text-align:center;
+                                     color:#777; font-size:0.42em; text-align:center;
                                      pointer-events:none; line-height:2.0;">
             等待第一個回覆 ✨<br>
             輸入詞語後將在此繪製即時文字雲！
@@ -317,9 +314,11 @@
     </section>
 
     <!-- Slide 4: 三兄弟的日常修練 [ICON] -->
-    <section>
-      <h2 style="margin-bottom:0.1em;">三兄弟的日常差事</h2>
-      <p style="font-size:0.45em; color:#aaa; margin-bottom:0.8em;">白眉老人在屋後畫了個圈讓他們「蹲馬步」，並給每人派了一份特別的差事：</p>
+    <section data-background-image="images/bg_slide4.png"
+             data-background-opacity="0.25"
+             data-background-size="cover">
+      <h2 style="margin-bottom:0.1em; text-shadow: 1px 1px 3px rgba(0,0,0,0.8);">三兄弟的日常差事</h2>
+      <p style="font-size:0.45em; color:#ccc; margin-bottom:0.8em; text-shadow: 1px 1px 2px rgba(0,0,0,0.8);">白眉老人在屋後畫了個圈讓他們「蹲馬步」，並給每人派了一份特別的差事：</p>
       
       <div class="adv-grid">
         <!-- 卡片 1: 老大 -->
@@ -353,31 +352,23 @@
     </section>
 
     <!-- Slide 5: 十年對比 [VIZ] -->
-    <section>
-      <h2>十年修練的成果</h2>
-      <p style="font-size:0.42em; color:#aaa; margin-bottom:1.0em;">拖動滑桿，看看十年的日常工作為他們帶來了什麼改變：</p>
+    <section data-background-image="images/bg_slide5.png"
+             data-background-opacity="0.25"
+             data-background-size="cover">
+      <h2 style="text-shadow: 1px 1px 3px rgba(0,0,0,0.8);">十年修練的驚人轉變</h2>
+      <p style="font-size:0.45em; color:#ccc; margin-bottom:1.0em; text-shadow: 1px 1px 2px rgba(0,0,0,0.8);">拖動滑桿，平滑看見三兄弟「十年前」與「十年後」的特訓對比變化：</p>
       
       <div class="viz-container">
         <!-- Before: 十年前 -->
         <div id="viz-before" class="viz-side">
-          <div class="viz-content">
-            <div class="viz-title" style="color:var(--warn);">🌱 十年前的起點 (日常勞務)</div>
-            <ul class="viz-list">
-              <li><strong>老大：</strong>跳過一株小小的綠色樹苗。</li>
-              <li><strong>老二：</strong>抱著一隻剛出生、軟綿綿的小乳牛。</li>
-              <li><strong>老三：</strong>拿著小木弓，小心地在竹林捕捉小雀鳥。</li>
-            </ul>
+          <div style="position: absolute; top: 15px; left: 15px; background: rgba(13,17,23,0.85); padding: 6px 14px; border-radius: 20px; font-size: 0.45em; font-weight: bold; border: 1px solid rgba(255,255,255,0.15); z-index: 10; color: var(--warn);">
+            🌱 十年前：小樹苗 ． 小牛 ． 小弓箭
           </div>
         </div>
         <!-- After: 十年後 -->
         <div id="viz-after" class="viz-side">
-          <div class="viz-content">
-            <div class="viz-title" style="color:var(--accent2);">🌳 十年後的蛻變 (絕世神功)</div>
-            <ul class="viz-list">
-              <li><strong>老大（輕功）：</strong>樹苗已長成參天大樹，他能飛越樹梢！</li>
-              <li><strong>老二（神力）：</strong>小乳牛已長成巨大的黃牛，他仍能輕鬆抱起！</li>
-              <li><strong>老三（箭術）：</strong>百步穿楊，箭像流星，能一次命中數隻飛鳥！</li>
-            </ul>
+          <div style="position: absolute; top: 15px; right: 15px; background: rgba(13,17,23,0.85); padding: 6px 14px; border-radius: 20px; font-size: 0.45em; font-weight: bold; border: 1px solid rgba(79,195,247,0.3); z-index: 10; color: var(--accent2);">
+            🌳 十年後：大樹 ． 大黃牛 ． 神射手
           </div>
         </div>
         <!-- 分隔線 -->
@@ -393,10 +384,12 @@
     </section>
 
     <!-- Slide 6: 危機來襲 -->
-    <section>
-      <h2>強盜來襲！</h2>
+    <section data-background-image="images/bg_slide6.png"
+             data-background-opacity="0.28"
+             data-background-size="cover">
+      <h2 style="text-shadow: 1px 1px 3px rgba(0,0,0,0.8);">強盜來襲！</h2>
       <div class="vs-grid">
-        <div class="vs-col left-col">
+        <div class="vs-col left-col" style="background: rgba(13, 17, 23, 0.85);">
           <div class="vs-label left">🏡 平靜的山莊</div>
           <ul>
             <li>白眉老人的隱居之處</li>
@@ -405,8 +398,8 @@
             <li>看來手無寸鐵的四個村民</li>
           </ul>
         </div>
-        <div class="vs-center">VS</div>
-        <div class="vs-col right-col">
+        <div class="vs-center" style="text-shadow: 0 0 10px rgba(0,0,0,0.9);">VS</div>
+        <div class="vs-col right-col" style="background: rgba(13, 17, 23, 0.85);">
           <div class="vs-label right">⚔ 土匪「頭刀刀疤」</div>
           <ul>
             <li>尋找三兄弟下落十年的惡匪</li>
@@ -419,18 +412,20 @@
     </section>
 
     <!-- Slide 7: 大顯身手 -->
-    <section>
-      <h2>這就是「功夫」！</h2>
-      <p style="font-size:0.45em; color:#aaa; margin-bottom:1.0em;">危機關頭，三兄弟在電光石火間展現了驚人實力：</p>
+    <section data-background-image="images/bg_slide7.png"
+             data-background-opacity="0.25"
+             data-background-size="cover">
+      <h2 style="text-shadow: 1px 1px 3px rgba(0,0,0,0.8);">這就是「功夫」！</h2>
+      <p style="font-size:0.45em; color:#ccc; margin-bottom:1.0em; text-shadow: 1px 1px 2px rgba(0,0,0,0.8);">危機關頭，三兄弟在電光石火間展現了驚人實力：</p>
       <div class="conclusion-grid">
-        <div class="conclusion-card positive fragment">
+        <div class="conclusion-card positive fragment" style="background: rgba(13, 17, 23, 0.85); border: 1px solid rgba(79,195,247,0.35);">
           <div class="cc-title">⚡ 老大與老二的絕技</div>
           <ul>
             <li><strong>老大「草上飛」：</strong>騰空而起跨過大樹，飛鷹般連環踢向強盜們的臉。</li>
             <li><strong>老二「大力士」：</strong>隨手抓起重達數百斤、像牛一樣大的巨石，狂奔擲去。</li>
           </ul>
         </div>
-        <div class="conclusion-card caution fragment">
+        <div class="conclusion-card caution fragment" style="background: rgba(13, 17, 23, 0.85); border: 1px solid rgba(232,100,58,0.3);">
           <div class="cc-title">🎯 老三的神射與落荒</div>
           <ul>
             <li><strong>老三「神射手」：</strong>拉弓如滿月，箭矢如流星，精準擊中盜匪兵刃與馬鞍。</li>
@@ -440,26 +435,31 @@
       </div>
     </section>
 
-    <!-- Slide 8: 互動投票 [INTERACT:poll] -->
-    <section id="slide-poll">
+    <!-- Slide 8: 現場投票 [INTERACT:poll] -->
+    <section id="slide-poll"
+             data-background-image="images/bg_slide8.png"
+             data-background-opacity="0.25"
+             data-background-size="cover">
       <div class="interact-title">現場票選：三兄弟的功夫，你最想學哪一種？</div>
       <div id="poll-options" style="display:flex; flex-direction:column; gap:12px; max-width:650px; margin: 0.8em auto 0 auto;">
         <!-- 由 JS 動態生成選項 -->
       </div>
-      <div style="font-size:0.38em; color:#888; text-align:center; margin-top:1.0em;">
+      <div style="font-size:0.38em; color:#eee; text-align:center; margin-top:1.0em; text-shadow: 1px 1px 3px rgba(0,0,0,0.8);">
         已投票學員：<span id="poll-total" style="color:var(--accent); font-weight:700;">0</span> 人
       </div>
     </section>
 
     <!-- Slide 9: 功夫的真諦 -->
-    <section>
-      <h2>無招勝有招，功在日常</h2>
-      <div class="quote-box">
+    <section data-background-image="images/bg_slide9.png"
+             data-background-opacity="0.25"
+             data-background-size="cover">
+      <h2 style="text-shadow: 1px 1px 3px rgba(0,0,0,0.8);">無招勝有招，功在日常</h2>
+      <div class="quote-box" style="background: rgba(13, 17, 23, 0.85);">
         「師父——您到底什麼時候才要教我們真正的功夫啊？」<br>
         打敗強盜後，老大瘦皮猴依然滿臉困惑地問著，而白眉老人只是慢吞吞地走出來，微微一笑。
         <div class="quote-author">—— 繪本《功夫》結尾</div>
       </div>
-      <p style="font-size:0.48em; line-height:1.8; color:#ccc; text-align:left; max-width:820px; margin: 0.8em auto 0 auto;">
+      <p style="font-size:0.48em; line-height:1.8; color:#eee; text-align:left; max-width:820px; margin: 0.8em auto 0 auto; text-shadow: 1px 1px 3px rgba(0,0,0,0.8);">
         三兄弟這才恍然大悟：十年前的小樹苗長成大樹、小牛犢長成巨牛、小獵物鍛鍊出的動態視力——<br>
         原來，<strong>師父早在每天的功課中，把最深奧的功夫，一點一滴融進了他們的身體與生活中</strong>。真正的修行，並非在什麼秘笈或招式，而在於日常每一天的累積。
       </p>
@@ -473,14 +473,22 @@
         <div class="big-icon">
           <img src="images/icon_axe.png" alt="功夫圖標">
         </div>
-        <h1 style="color:var(--accent2); font-size:2.2em;">持之以恆，就是你的功夫</h1>
-        <p class="tagline" style="font-size:0.7em;">今天起，為自己的小樹苗澆水吧！</p>
-        <p style="font-size:0.45em; color:#666; margin-top:2em;">湯姆牛《功夫》繪本故事導讀報告 ． 謝謝大家</p>
+        <h1 style="color:var(--accent2); font-size:2.2em; text-shadow: 1px 1px 3px rgba(0,0,0,0.8);">持之以恆，就是你的功夫</h1>
+        <p class="tagline" style="font-size:0.7em; text-shadow: 1px 1px 3px rgba(0,0,0,0.8);">今天起，為自己的小樹苗澆水吧！</p>
+        <p style="font-size:0.45em; color:#ccc; margin-top:2em; text-shadow: 1px 1px 2px rgba(0,0,0,0.8);">湯姆牛《功夫》繪本故事導讀報告 ． 謝謝大家</p>
       </div>
     </section>
 
   </div>
 </div>
+
+<!-- Floating Font Toggle Button for Zhuyin -->
+<button id="font-toggle-btn" style="position: fixed; bottom: 20px; left: 20px; z-index: 1000;
+  background: var(--accent); color: white; border: none; border-radius: 30px;
+  padding: 10px 18px; font-size: 14px; font-weight: bold; cursor: pointer;
+  box-shadow: 0 4px 15px rgba(232, 100, 58, 0.5); display: flex; align-items: center; gap: 8px; transition: all 0.3s ease;">
+  <span>🍬 注音模式 (關)</span>
+</button>
 
 <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
 <script>
@@ -497,7 +505,36 @@
     plugins: []
   });
 
-  // VIZ 滑桿控制與 clip-path 動態渲染
+  // Bpmf Iansui 注音字型一鍵切換邏輯
+  const fontToggleBtn = document.getElementById('font-toggle-btn');
+  let isZhuyinMode = localStorage.getItem('zhuyin_mode') === 'true';
+
+  function setZhuyinMode(active) {
+    if (active) {
+      document.body.classList.add('zhuyin-mode');
+      fontToggleBtn.innerHTML = '<span>🍬 注音模式 (開)</span>';
+      fontToggleBtn.style.background = 'var(--success)';
+      fontToggleBtn.style.boxShadow = '0 4px 15px rgba(129, 199, 132, 0.5)';
+    } else {
+      document.body.classList.remove('zhuyin-mode');
+      fontToggleBtn.innerHTML = '<span>🍬 注音模式 (關)</span>';
+      fontToggleBtn.style.background = 'var(--accent)';
+      fontToggleBtn.style.boxShadow = '0 4px 15px rgba(232, 100, 58, 0.5)';
+    }
+    localStorage.setItem('zhuyin_mode', active);
+    // 重繪 Reveal
+    Reveal.layout();
+  }
+
+  // 初始化注音字型狀態
+  setZhuyinMode(isZhuyinMode);
+
+  fontToggleBtn.addEventListener('click', () => {
+    isZhuyinMode = !isZhuyinMode;
+    setZhuyinMode(isZhuyinMode);
+  });
+
+  // VIZ 滑桿控制與 clip-path 動態渲染 (視覺化對比)
   const vizSlider = document.getElementById('viz-slider');
   const vizAfter = document.getElementById('viz-after');
   const vizDivider = document.getElementById('viz-divider');
@@ -539,15 +576,53 @@
     appId: "1:196599230156:web:cfe55d364df3ae1b9d5c69"
   };
 
-  const app = initializeApp(firebaseConfig);
-  const fdb = getFirestore(app);
+  let fdb = null;
+  let useFallback = false;
+  
+  // 建立本地 Storage 備份陣列與 ID
+  let localWords = JSON.parse(localStorage.getItem('kungfu_words') || '[]');
+  let localVotes = JSON.parse(localStorage.getItem('kungfu_votes') || '{}');
+  const userId = localStorage.getItem('kungfu_userid') || ('user_' + Math.random().toString(36).slice(2, 9));
+  localStorage.setItem('kungfu_userid', userId);
+
+  // 建立 BroadcastChannel 以實現本地多分頁即時同步
+  const syncChannel = new BroadcastChannel('kungfu_local_sync');
+
+  // 初始化 Firebase
+  try {
+    const app = initializeApp(firebaseConfig);
+    fdb = getFirestore(app);
+  } catch (e) {
+    console.warn("Firebase initialization failed, utilizing local fallback mode.", e);
+    useFallback = true;
+  }
 
   // ==========================================
-  // 1. 文字雲元件
+  // 3. 文字雲元件 (Firestore 監聽 + 本地 Fallback)
   // ==========================================
   const wordsRef = collection(fdb, 'kungfu_story_wordcloud');
   const COLORS = ['#4fc3f7','#e8643a','#ffb74d','#81c784','#ce93d8','#80deea','#f48fb1'];
   let wcData = [];
+  let unsubscribeWords = null;
+
+  // 嘗試啟動 Firebase 監聽
+  if (fdb && !useFallback) {
+    try {
+      unsubscribeWords = onSnapshot(query(wordsRef, orderBy('created_at', 'asc')), snap => {
+        const words = [];
+        snap.forEach(doc => words.push(doc.data().word));
+        updateWordcloudUI(words);
+      }, error => {
+        console.warn("Firestore Wordcloud snapshot failed. Falling back to Local Storage.", error);
+        enableFallbackMode();
+      });
+    } catch (e) {
+      console.warn("Firestore Wordcloud setup failed. Falling back to Local Storage.", e);
+      enableFallbackMode();
+    }
+  } else {
+    enableFallbackMode();
+  }
 
   window.wcSubmit = async function() {
     const input = document.getElementById('wc-input');
@@ -556,10 +631,25 @@
     const btn = document.getElementById('wc-btn');
     btn.disabled = true;
     try {
-      await addDoc(wordsRef, { word, created_at: serverTimestamp() });
+      if (!useFallback && fdb) {
+        await addDoc(wordsRef, { word, created_at: serverTimestamp() });
+      } else {
+        // 本地模式寫入
+        localWords.push(word);
+        localStorage.setItem('kungfu_words', JSON.stringify(localWords));
+        syncChannel.postMessage({ type: 'wordcloud', word });
+        updateWordcloudUI(localWords);
+      }
       input.value = '';
     } catch(e) { 
-      console.error("Firebase submit error:", e); 
+      console.warn("Submit word error. Toggling fallback.", e);
+      enableFallbackMode();
+      // 降級後重試
+      localWords.push(word);
+      localStorage.setItem('kungfu_words', JSON.stringify(localWords));
+      syncChannel.postMessage({ type: 'wordcloud', word });
+      updateWordcloudUI(localWords);
+      input.value = '';
     } finally { 
       btn.disabled = false; 
     }
@@ -570,29 +660,30 @@
   });
   document.getElementById('wc-btn')?.addEventListener('click', window.wcSubmit);
 
-  // 監聽文字雲變化
-  onSnapshot(query(wordsRef, orderBy('created_at', 'asc')), snap => {
-    const words = [];
-    snap.forEach(doc => words.push(doc.data().word));
+  function updateWordcloudUI(words) {
     const counts = {};
     words.forEach(w => counts[w] = (counts[w] || 0) + 1);
     wcData = Object.entries(counts).sort((a, b) => b[1] - a[1]);
 
-    document.getElementById('wc-total').textContent = words.length;
-    document.getElementById('wc-unique').textContent = wcData.length;
+    const totalEl = document.getElementById('wc-total');
+    const uniqueEl = document.getElementById('wc-unique');
+    if (totalEl) totalEl.textContent = words.length;
+    if (uniqueEl) uniqueEl.textContent = wcData.length;
 
     const listEl = document.getElementById('wc-list');
-    listEl.innerHTML = wcData.slice(0, 7).map(([w, c]) =>
-      `<div style="display:flex;justify-content:space-between;padding:5px 0;
-                   border-bottom:1px solid rgba(255,255,255,0.06); font-size:14px;">
-        <span>${w}</span><span style="color:var(--accent);font-weight:700;">${c} 次</span>
-      </div>`
-    ).join('') || '<div style="color:#555;padding:8px 0;text-align:center;">尚無資料</div>';
+    if (listEl) {
+      listEl.innerHTML = wcData.slice(0, 7).map(([w, c]) =>
+        `<div style="display:flex;justify-content:space-between;padding:5px 0;
+                     border-bottom:1px solid rgba(255,255,255,0.06); font-size:14px;">
+          <span>${w}</span><span style="color:var(--accent);font-weight:700;">${c} 次</span>
+        </div>`
+      ).join('') || '<div style="color:#555;padding:8px 0;text-align:center;">尚無資料</div>';
+    }
 
     const empty = document.getElementById('wc-empty');
     if (empty) empty.style.display = wcData.length > 0 ? 'none' : '';
     drawWordCloud();
-  });
+  }
 
   function drawWordCloud() {
     const canvas = document.getElementById('wc-canvas');
@@ -607,7 +698,7 @@
       list: wcData.map(([w, c]) => [w, Math.max(16, Math.round((c / maxCount) * 60))]),
       gridSize: 8,
       weightFactor: 1,
-      fontFamily: '"Segoe UI", "Noto Sans TC", "Microsoft JhengHei", sans-serif',
+      fontFamily: isZhuyinMode ? '"Bpmf Iansui", cursive' : '"Segoe UI", "Noto Sans TC", sans-serif',
       color: () => COLORS[Math.floor(Math.random() * COLORS.length)],
       backgroundColor: 'transparent',
       rotateRatio: 0.25,
@@ -616,7 +707,7 @@
   }
 
   // ==========================================
-  // 2. 投票元件
+  // 8. 投票元件 (Firestore 監聽 + 本地 Fallback)
   // ==========================================
   const OPTIONS = [
     { id: 'a', label: '🥋 輕功草上飛 (老大 瘦皮猴)' },
@@ -624,8 +715,8 @@
     { id: 'c', label: '🎯 百步穿楊神射手 (老三 小不點)' },
   ];
   const pollRef = doc(fdb, 'kungfu_story_poll', 'results');
-  const userId = 'user_' + Math.random().toString(36).slice(2, 9);
-  let myVote = null;
+  let myVote = localStorage.getItem('kungfu_my_vote');
+  let unsubscribePoll = null;
 
   // 渲染投票選項
   const container = document.getElementById('poll-options');
@@ -646,8 +737,8 @@
           <span id="poll-pct-${opt.id}" style="flex:0 0 42px;text-align:right;font-size:0.8em;color:#888;font-weight:700;">0%</span>
         </div>
       `;
-      btn.style.cssText = `width:100%;padding:14px 18px;background:rgba(255,255,255,0.04);
-        border:1px solid rgba(255,255,255,0.1);border-radius:10px;color:#fff;
+      btn.style.cssText = `width:100%;padding:14px 18px;background:rgba(13, 17, 23, 0.85);
+        border:1px solid rgba(255,255,255,0.12);border-radius:10px;color:#fff;
         font-size:0.48em;cursor:pointer;font-family:inherit;text-align:left;transition:background 0.3s, border-color 0.3s;`;
       
       btn.onmouseover = () => {
@@ -655,8 +746,8 @@
         btn.style.borderColor = 'rgba(79,195,247,0.4)';
       };
       btn.onmouseout = () => {
-        btn.style.background = 'rgba(255,255,255,0.04)';
-        btn.style.borderColor = 'rgba(255,255,255,0.1)';
+        btn.style.background = 'rgba(13, 17, 23, 0.85)';
+        btn.style.borderColor = 'rgba(255,255,255,0.12)';
       };
 
       btn.onclick = () => vote(opt.id);
@@ -664,18 +755,53 @@
     });
   }
 
-  async function vote(optId) {
-    myVote = optId;
-    const data = {};
-    data[`votes.${userId}`] = optId;
-    data.updated_at = serverTimestamp();
-    await setDoc(pollRef, data, { merge: true });
+  // 嘗試啟動 Firebase 監聽
+  if (fdb && !useFallback) {
+    try {
+      unsubscribePoll = onSnapshot(pollRef, snap => {
+        const data = snap.data() || {};
+        const votes = data.votes || {};
+        updatePollUI(votes);
+      }, error => {
+        console.warn("Firestore Poll snapshot failed. Falling back to Local Storage.", error);
+        enableFallbackMode();
+      });
+    } catch(e) {
+      console.warn("Firestore Poll setup failed. Falling back to Local Storage.", e);
+      enableFallbackMode();
+    }
+  } else {
+    enableFallbackMode();
   }
 
-  // 監聽投票數據
-  onSnapshot(pollRef, snap => {
-    const data = snap.data() || {};
-    const votes = data.votes || {};
+  async function vote(optId) {
+    myVote = optId;
+    localStorage.setItem('kungfu_my_vote', optId);
+    try {
+      if (!useFallback && fdb) {
+        const data = {};
+        data[`votes.${userId}`] = optId;
+        data.updated_at = serverTimestamp();
+        await setDoc(pollRef, data, { merge: true });
+      } else {
+        // 本地投票模式寫入
+        localVotes[userId] = optId;
+        localStorage.setItem('kungfu_votes', JSON.stringify(localVotes));
+        syncChannel.postMessage({ type: 'poll', vote: optId, userId });
+        updatePollUI(localVotes);
+      }
+    } catch(e) {
+      console.warn("Vote error. Toggling fallback.", e);
+      enableFallbackMode();
+      // 降級後寫入
+      localVotes[userId] = optId;
+      localStorage.setItem('kungfu_votes', JSON.stringify(localVotes));
+      syncChannel.postMessage({ type: 'poll', vote: optId, userId });
+      updatePollUI(localVotes);
+    }
+  }
+
+  function updatePollUI(votes) {
     const counts = {};
     OPTIONS.forEach(o => counts[o.id] = 0);
     Object.values(votes).forEach(v => { 
@@ -683,7 +809,9 @@
     });
     const total = Object.values(counts).reduce((a, b) => a + b, 0);
 
-    document.getElementById('poll-total').textContent = total;
+    const totalEl = document.getElementById('poll-total');
+    if (totalEl) totalEl.textContent = total;
+
     OPTIONS.forEach(opt => {
       const pct = total > 0 ? Math.round((counts[opt.id] / total) * 100) : 0;
       const bar = document.getElementById(`poll-bar-${opt.id}`);
@@ -704,13 +832,48 @@
         }
       }
     });
-  });
+  }
+
+  // ==========================================
+  // 本地 Fallback 啟用機制與 Broadcast 監聽
+  // ==========================================
+  function enableFallbackMode() {
+    if (useFallback) return;
+    useFallback = true;
+    console.log("Fallback mode successfully enabled.");
+    if (unsubscribeWords) unsubscribeWords();
+    if (unsubscribePoll) unsubscribePoll();
+    
+    // 初始化本地數據展示
+    updateWordcloudUI(localWords);
+    updatePollUI(localVotes);
+  }
+
+  // 監聽來自其他頁面的 Broadcast 同步訊息
+  syncChannel.onmessage = (event) => {
+    if (useFallback) {
+      if (event.data.type === 'wordcloud') {
+        localWords.push(event.data.word);
+        localStorage.setItem('kungfu_words', JSON.stringify(localWords));
+        updateWordcloudUI(localWords);
+      } else if (event.data.type === 'poll') {
+        localVotes[event.data.userId] = event.data.vote;
+        localStorage.setItem('kungfu_votes', JSON.stringify(localVotes));
+        updatePollUI(localVotes);
+      }
+    }
+  };
 
   // Reveal 切頁事件重繪文字雲
   Reveal.on('slidechanged', e => {
     if (e.currentSlide?.id === 'slide-wordcloud') {
       setTimeout(drawWordCloud, 200);
     }
+  });
+
+  // 當開關切換時重新渲染文字雲字體
+  fontToggleBtn.addEventListener('click', () => {
+    setTimeout(drawWordCloud, 100);
   });
 </script>
 </body>
