@@ -75,25 +75,20 @@
     .reveal .fragment { opacity: 0.15; transition: all 0.5s ease; }
     .reveal .fragment.visible { opacity: 1; }
 
-    /* 支援字級放大時的內容滾動，避免遮蔽文字 */
+    /* 支援字級放大時的內容滾動，隱藏原生滾動條以防遮蔽畫面，改用全螢幕自訂滾動條 */
     .reveal .slides section {
       max-height: 95% !important;
       overflow-y: auto !important;
-      scrollbar-width: thin;
+      scrollbar-width: none; /* Firefox */
       box-sizing: border-box;
     }
     .reveal .slides section::-webkit-scrollbar {
-      width: 6px;
+      display: none; /* Chrome, Safari, Edge */
     }
-    .reveal .slides section::-webkit-scrollbar-track {
-      background: transparent;
-    }
-    .reveal .slides section::-webkit-scrollbar-thumb {
-      background: rgba(0, 0, 0, 0.15);
-      border-radius: 4px;
-    }
-    .reveal .slides section::-webkit-scrollbar-thumb:hover {
-      background: rgba(0, 0, 0, 0.3);
+
+    /* 全螢幕自訂滾動條滑過效果 */
+    #custom-scrollbar-thumb:hover {
+      background: rgba(22, 160, 133, 0.45) !important;
     }
 
     /* === 注音字型切換與排版優化 === */
@@ -148,7 +143,7 @@
       font-weight: 600;
       box-shadow: 0 4px 10px rgba(217, 83, 30, 0.2);
     }
-    .title-slide .subtitle { font-size: calc(0.7em * var(--font-scale)) !important; color: #4a5568; margin-top: 0.5em; line-height: 1.5; }
+    .title-slide .subtitle { font-size: calc(0.7em * var(--font-scale)) !important; color: #cbd5e1; margin-top: 0.5em; line-height: 1.5; }
     .title-slide .author { margin-top: 2.2em; font-size: calc(0.45em * var(--font-scale)) !important; color: #a0aec0; }
 
     /* === 三欄修練卡片 (ICON) === */
@@ -1214,6 +1209,121 @@
   // 當開關切換時重新渲染文字雲字體
   fontToggleBtn.addEventListener('click', () => {
     setTimeout(drawWordCloud, 100);
+  });
+</script>
+<!-- Custom Full-Screen Scrollbar -->
+<div id="custom-scrollbar" style="position: fixed; top: 0; right: 4px; width: 6px; height: 100vh; z-index: 9999; display: none; pointer-events: none;">
+  <div id="custom-scrollbar-thumb" style="width: 100%; background: rgba(22, 160, 133, 0.25); border-radius: 3px; position: absolute; top: 0; cursor: pointer; pointer-events: auto; transition: background 0.2s;"></div>
+</div>
+
+<script>
+  // 自訂全螢幕滾動條同步邏輯
+  const customScrollbar = document.getElementById('custom-scrollbar');
+  const customScrollbarThumb = document.getElementById('custom-scrollbar-thumb');
+  let isDraggingScrollbar = false;
+  let startScrollY = 0;
+  let startScrollTop = 0;
+
+  function updateCustomScrollbar() {
+    const activeSlide = Reveal.getCurrentSlide();
+    if (!activeSlide || !customScrollbar || !customScrollbarThumb) return;
+
+    const sh = activeSlide.scrollHeight;
+    const ch = activeSlide.clientHeight;
+
+    if (sh > ch + 10) {
+      customScrollbar.style.display = 'block';
+      const thumbHeight = Math.max(30, (ch / sh) * window.innerHeight);
+      customScrollbarThumb.style.height = `${thumbHeight}px`;
+      
+      const scrollPercent = activeSlide.scrollTop / (sh - ch);
+      const maxTop = window.innerHeight - thumbHeight;
+      customScrollbarThumb.style.top = `${scrollPercent * maxTop}px`;
+    } else {
+      customScrollbar.style.display = 'none';
+    }
+  }
+
+  // 監聽所有投影頁面的原生滾動事件
+  document.querySelectorAll('.reveal .slides section').forEach(sec => {
+    sec.addEventListener('scroll', updateCustomScrollbar);
+  });
+
+  // 切換投影片與視窗縮放時更新滾動條
+  Reveal.on('slidechanged', () => {
+    setTimeout(updateCustomScrollbar, 200);
+  });
+  window.addEventListener('resize', updateCustomScrollbar);
+
+  // 監聽 Ctrl + 滾輪縮放字型時，即時更新滾動條狀態
+  window.addEventListener('wheel', (e) => {
+    if (e.ctrlKey) {
+      setTimeout(updateCustomScrollbar, 50);
+    }
+  }, { passive: true });
+
+  // 滑鼠拖曳自訂滾動條控制邏輯
+  customScrollbarThumb.addEventListener('mousedown', (e) => {
+    isDraggingScrollbar = true;
+    startScrollY = e.clientY;
+    const activeSlide = Reveal.getCurrentSlide();
+    if (activeSlide) {
+      startScrollTop = activeSlide.scrollTop;
+    }
+    document.body.style.userSelect = 'none';
+  });
+
+  document.addEventListener('mousemove', (e) => {
+    if (!isDraggingScrollbar) return;
+    const activeSlide = Reveal.getCurrentSlide();
+    if (!activeSlide) return;
+
+    const sh = activeSlide.scrollHeight;
+    const ch = activeSlide.clientHeight;
+    const thumbHeight = parseFloat(customScrollbarThumb.style.height);
+    const maxTop = window.innerHeight - thumbHeight;
+    
+    const deltaY = e.clientY - startScrollY;
+    const scrollDeltaPercent = deltaY / maxTop;
+    activeSlide.scrollTop = startScrollTop + scrollDeltaPercent * (sh - ch);
+    updateCustomScrollbar();
+  });
+
+  document.addEventListener('mouseup', () => {
+    if (isDraggingScrollbar) {
+      isDraggingScrollbar = false;
+      document.body.style.userSelect = '';
+    }
+  });
+
+  // 觸控拖曳自訂滾動條控制邏輯 (行動裝置)
+  customScrollbarThumb.addEventListener('touchstart', (e) => {
+    isDraggingScrollbar = true;
+    startScrollY = e.touches[0].clientY;
+    const activeSlide = Reveal.getCurrentSlide();
+    if (activeSlide) {
+      startScrollTop = activeSlide.scrollTop;
+    }
+  }, { passive: true });
+
+  document.addEventListener('touchmove', (e) => {
+    if (!isDraggingScrollbar) return;
+    const activeSlide = Reveal.getCurrentSlide();
+    if (!activeSlide) return;
+
+    const sh = activeSlide.scrollHeight;
+    const ch = activeSlide.clientHeight;
+    const thumbHeight = parseFloat(customScrollbarThumb.style.height);
+    const maxTop = window.innerHeight - thumbHeight;
+
+    const deltaY = e.touches[0].clientY - startScrollY;
+    const scrollDeltaPercent = deltaY / maxTop;
+    activeSlide.scrollTop = startScrollTop + scrollDeltaPercent * (sh - ch);
+    updateCustomScrollbar();
+  });
+
+  document.addEventListener('touchend', () => {
+    isDraggingScrollbar = false;
   });
 </script>
 </body>
