@@ -17,7 +17,7 @@
       --accent2: #0f75bc;   /* 活力藍色 (次強調) */
       --success: #2e7d32;   /* 深綠色 */
       --warn:    #e65100;   /* 深琥珀色 */
-      --bg-light: #faf8f5;  /* 亮色溫暖背景 (米白/粉乳色) */
+      --bg-light: #dfdacb;  /* 折衷溫和護眼底色 (暖色羊皮紙/米灰) */
       --font-scale: 1.0;    /* 滾輪字體縮放比例 */
     }
 
@@ -31,14 +31,33 @@
     .reveal .controls { color: var(--accent2); }
     .reveal .progress { color: var(--accent); }
     
-    /* 套用底圖反轉濾鏡，將原本暗色的 AI 底圖轉化為明亮、溫暖的手繪水彩質感 */
+    /* 套用底圖反轉濾鏡，折衷亮色度以減輕刺眼感 */
     .reveal .slide-background {
-      filter: invert(0.92) hue-rotate(185deg) brightness(1.18) contrast(0.92) !important;
+      filter: invert(0.88) hue-rotate(180deg) brightness(1.0) contrast(0.9) !important;
+      opacity: 0.22 !important; /* 降低底圖透明度以利跟暖色護眼背景融合 */
     }
     
-    /* VIZ 插圖對比元件的圖片同步反轉，呈現明亮手繪感 */
+    /* VIZ 插圖對比元件的圖片同步反轉與定位 */
     .viz-side {
-      filter: invert(0.92) hue-rotate(185deg) brightness(1.18) contrast(0.92);
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-color: var(--bg-light);
+      filter: invert(0.88) hue-rotate(180deg) brightness(1.0) contrast(0.9);
+    }
+    #viz-before {
+      background-image: url('images/viz_before.png');
+      z-index: 5;
+    }
+    #viz-after {
+      background-image: url('images/viz_after.png');
+      clip-path: inset(0 100% 0 0);
+      z-index: 10;
     }
 
     .reveal h1, .reveal h2, .reveal h3 {
@@ -319,9 +338,14 @@
             <div id="wc-list" style="font-size:calc(0.34em * var(--font-scale)); overflow-y:auto; flex:1; color:#2d3748;">
               <div style="color:#888;padding:8px 0;text-align:center;">尚無資料</div>
             </div>
-            <div style="margin-top:8px; font-size:calc(0.32em * var(--font-scale)); color:#718096; border-top:1px solid rgba(0,0,0,0.08); padding-top:6px;">
-              總次數：<span id="wc-total" style="color:var(--accent); font-weight:700;">0</span>　
-              獨立詞：<span id="wc-unique" style="color:var(--accent2); font-weight:700;">0</span>
+            <div style="margin-top:8px; font-size:calc(0.32em * var(--font-scale)); color:#718096; border-top:1px solid rgba(0,0,0,0.08); padding-top:6px; display:flex; justify-content:space-between; align-items:center;">
+              <div>
+                總次數：<span id="wc-total" style="color:var(--accent); font-weight:700;">0</span>　
+                獨立詞：<span id="wc-unique" style="color:var(--accent2); font-weight:700;">0</span>
+              </div>
+              <button id="wc-clear-btn" style="background:#ff4757; color:#fff; border:none; border-radius:4px; padding:3px 8px; font-size:11px; font-weight:bold; cursor:pointer; font-family:inherit;">
+                清除 🗑
+              </button>
             </div>
           </div>
         </div>
@@ -846,7 +870,7 @@
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js';
   import {
     getFirestore, collection, addDoc, onSnapshot, doc, setDoc,
-    serverTimestamp, query, orderBy
+    serverTimestamp, query, orderBy, getDocs, deleteDoc
   } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js';
 
   // 共用 Firebase 配置資訊
@@ -938,10 +962,39 @@
     }
   };
 
+  window.wcClearAll = async function() {
+    const btn = document.getElementById('wc-clear-btn');
+    if (btn) btn.disabled = true;
+    try {
+      if (!useFallback && fdb) {
+        const snap = await getDocs(wordsRef);
+        const promises = [];
+        snap.forEach(docSnap => {
+          promises.push(deleteDoc(docSnap.ref));
+        });
+        await Promise.all(promises);
+      }
+      // 同步清除本地與儲存區
+      localWords = [];
+      localStorage.removeItem('kungfu_words');
+      syncChannel.postMessage({ type: 'wordcloud_clear' });
+      updateWordcloudUI([]);
+    } catch(e) {
+      console.warn("Clear wordcloud error, clearing locally", e);
+      localWords = [];
+      localStorage.removeItem('kungfu_words');
+      syncChannel.postMessage({ type: 'wordcloud_clear' });
+      updateWordcloudUI([]);
+    } finally {
+      if (btn) btn.disabled = false;
+    }
+  };
+
   document.getElementById('wc-input')?.addEventListener('keypress', e => {
     if (e.key === 'Enter') window.wcSubmit();
   });
   document.getElementById('wc-btn')?.addEventListener('click', window.wcSubmit);
+  document.getElementById('wc-clear-btn')?.addEventListener('click', window.wcClearAll);
 
   function updateWordcloudUI(words) {
     const counts = {};
@@ -1140,6 +1193,10 @@
         localWords.push(event.data.word);
         localStorage.setItem('kungfu_words', JSON.stringify(localWords));
         updateWordcloudUI(localWords);
+      } else if (event.data.type === 'wordcloud_clear') {
+        localWords = [];
+        localStorage.removeItem('kungfu_words');
+        updateWordcloudUI([]);
       } else if (event.data.type === 'poll') {
         localVotes[event.data.userId] = event.data.vote;
         localStorage.setItem('kungfu_votes', JSON.stringify(localVotes));
